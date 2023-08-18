@@ -32,3 +32,42 @@ document.addEventListener("DOMContentLoaded", function() {
     googleLogoImage.src = randomGoogleLogoUrl;
 });
 
+    const form = document.querySelector("#advanced-form");
+    const advancedButton = document.querySelector("#advanced-button");
+
+    form.addEventListener("submit", function(event) {
+        event.preventDefault(); // Prevent default form submission
+        
+        const allWords = encodeURIComponent(form.all.value);
+        const exactWords = encodeURIComponent(form.exact.value);
+        const anyWords = encodeURIComponent(form.any.value);
+        const noneWords = encodeURIComponent(form.none.value);
+        
+        const searchURL = `https://www.google.com/search?all=${allWords}&exact=${exactWords}&any=${anyWords}&none=${noneWords}`;
+        
+        window.location.href = searchURL;
+    });
+
+    $("#image-search-form").submit(function(event) {
+        event.preventDefault();
+        $("#image-results").empty();
+        
+        const query = encodeURIComponent($("#search-bar").val());
+        const apiKey = "YOUR_GOOGLE_CUSTOM_SEARCH_API_KEY";
+        const cx = "YOUR_CUSTOM_SEARCH_ENGINE_ID";
+        const url = `https://www.googleapis.com/customsearch/v1?q=${query}&cx=${cx}&key=${apiKey}&searchType=image`;
+        
+        $.getJSON(url, function(data) {
+            const items = data.items;
+            if (items) {
+                items.forEach(function(item) {
+                    const imageUrl = item.link;
+                    const img = $("<img>").attr("src", imageUrl);
+                    $("#image-results").append(img);
+                });
+            }
+        });
+    });
+
+
+
